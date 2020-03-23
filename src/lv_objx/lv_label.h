@@ -94,7 +94,7 @@ typedef struct
 
     lv_label_long_mode_t long_mode : 3; /*Determinate what to do with the long texts*/
     uint8_t static_txt : 1;             /*Flag to indicate the text is static*/
-    uint8_t align : 2;                  /*Align type from 'lv_label_align_t'*/
+    uint8_t txt_align : 2;                  /*Align type from 'lv_label_align_t'*/
     uint8_t recolor : 1;                /*Enable in-line letter re-coloring*/
     uint8_t expand : 1;                 /*Ignore real width (used by the library with LV_LABEL_LONG_ROLL)*/
     uint8_t body_draw : 1;              /*Draw background body*/

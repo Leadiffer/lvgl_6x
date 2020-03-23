@@ -420,3 +420,89 @@ static void node_set_next(lv_ll_t * ll_p, lv_ll_node_t * act, lv_ll_node_t * nex
     else
         memset(act + LL_NEXT_P_OFFSET(ll_p), 0, node_p_size);
 }
+
+/**
+ * insert the n_ins node or a new to linked list as head
+ * @param ll_p pointer to linked list
+ * @param n_ins node to be insert
+ * @return pointer to the new head
+ */
+void * lv_ll_ins_head_with(lv_ll_t * ll_p, void * n_ins)
+{
+    lv_ll_node_t * n_new = n_ins ? n_ins : lv_mem_alloc(ll_p->n_size + LL_NODE_META_SIZE);
+
+    if(n_new != NULL) {
+        node_set_prev(ll_p, n_new, NULL);       /*No prev. before the new head*/
+        node_set_next(ll_p, n_new, ll_p->head); /*After new comes the old head*/
+
+        if(ll_p->head != NULL) { /*If there is old head then before it goes the new*/
+            node_set_prev(ll_p, ll_p->head, n_new);
+        }
+
+        ll_p->head = n_new;      /*Set the new head in the dsc.*/
+        if(ll_p->tail == NULL) { /*If there is no tail (1. node) set the tail too*/
+            ll_p->tail = n_new;
+        }
+    }
+
+    return n_new;
+}
+
+/**
+ * Insert the n_ins node or a new node in front of the n_act node
+ * @param ll_p pointer to linked list
+ * @param n_act pointer a node
+ * @param n_ins node to be insert
+ * @return pointer to the new head
+ */
+void * lv_ll_ins_prev_with(lv_ll_t * ll_p, void * n_act, void *n_ins)
+{
+    lv_ll_node_t * n_new;
+    lv_ll_node_t * n_prev;
+
+    if(NULL == ll_p || NULL == n_act) return NULL;
+
+    if(lv_ll_get_head(ll_p) == n_act) {
+        n_new = n_ins ? lv_ll_ins_head_with( ll_p, n_ins) : lv_ll_ins_head(ll_p);
+        if(n_new == NULL) return NULL;
+    } else {
+        n_new = n_ins ? n_ins : lv_mem_alloc(ll_p->n_size + LL_NODE_META_SIZE);
+        if(n_new == NULL) return NULL;
+
+        n_prev = lv_ll_get_prev(ll_p, n_act);
+        node_set_next(ll_p, n_prev, n_new);
+        node_set_prev(ll_p, n_new, n_prev);
+        node_set_prev(ll_p, n_act, n_new);
+        node_set_next(ll_p, n_new, n_act);
+    }
+
+    return n_new;
+}
+
+/**
+ * append the n_ins node or a new to linked list as tail
+ * @param ll_p pointer to linked list
+ * @param n_ins node to be append
+ * @return pointer to the new tail
+ */
+void * lv_ll_ins_tail_with(lv_ll_t * ll_p, void * n_ins)
+{
+    lv_ll_node_t * n_new = n_ins ? n_ins : lv_mem_alloc(ll_p->n_size + LL_NODE_META_SIZE);
+
+    if(n_new == NULL) return NULL;
+
+    if(n_new != NULL) {
+        node_set_next(ll_p, n_new, NULL);       /*No next after the new tail*/
+        node_set_prev(ll_p, n_new, ll_p->tail); /*The prev. before new is tho old tail*/
+        if(ll_p->tail != NULL) {                /*If there is old tail then the new comes after it*/
+            node_set_next(ll_p, ll_p->tail, n_new);
+        }
+
+        ll_p->tail = n_new;      /*Set the new tail in the dsc.*/
+        if(ll_p->head == NULL) { /*If there is no head (1. node) set the head too*/
+            ll_p->head = n_new;
+        }
+    }
+
+    return n_new;
+}

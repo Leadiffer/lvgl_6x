@@ -88,8 +88,13 @@ void lv_anim_create(lv_anim_t * a)
     /* Do not let two animations for the  same 'var' with the same 'fp'*/
     if(a->exec_cb != NULL) lv_anim_del(a->var, a->exec_cb); /*fp == NULL would delete all animations of var*/
 
+    lv_anim_t * new_anim = NULL;
+#ifdef LV_ANIM_CREATE
+    LV_ANIM_CREATE(new_anim,a,lv_ll_ins_head,&LV_GC_ROOT(_lv_anim_ll));
+#else
     /*Add the new animation to the animation linked list*/
-    lv_anim_t * new_anim = lv_ll_ins_head(&LV_GC_ROOT(_lv_anim_ll));
+    new_anim = lv_ll_ins_head(&LV_GC_ROOT(_lv_anim_ll));
+#endif
     LV_ASSERT_MEM(new_anim);
     if(new_anim == NULL) return;
 
@@ -126,7 +131,11 @@ bool lv_anim_del(void * var, lv_anim_exec_xcb_t exec_cb)
 
         if(a->var == var && (a->exec_cb == exec_cb || exec_cb == NULL)) {
             lv_ll_rem(&LV_GC_ROOT(_lv_anim_ll), a);
+#ifdef LV_ANIM_DEL
+            LV_ANIM_DEL(a);
+#else
             lv_mem_free(a);
+#endif
             anim_list_changed = true; /*Read by `anim_task`. It need to know if a delete occurred in
                                          the linked list*/
             del = true;

@@ -180,7 +180,11 @@ lv_task_t * lv_task_create_basic(void)
 
     /*It's the first task*/
     if(NULL == tmp) {
+#ifdef LV_TASK_CREATE_BASIC
+        LV_TASK_CREATE_BASIC(new_task,lv_ll_ins_head,&LV_GC_ROOT(_lv_task_ll),NULL);
+#else
         new_task = lv_ll_ins_head(&LV_GC_ROOT(_lv_task_ll));
+#endif
         LV_ASSERT_MEM(new_task);
         if(new_task == NULL) return NULL;
     }
@@ -188,7 +192,11 @@ lv_task_t * lv_task_create_basic(void)
     else {
         do {
             if(tmp->prio <= DEF_PRIO) {
+#ifdef LV_TASK_CREATE_BASIC
+                LV_TASK_CREATE_BASIC(new_task,lv_ll_ins_prev,&LV_GC_ROOT(_lv_task_ll),tmp);
+#else
                 new_task = lv_ll_ins_prev(&LV_GC_ROOT(_lv_task_ll), tmp);
+#endif
                 LV_ASSERT_MEM(new_task);
                 if(new_task == NULL) return NULL;
                 break;
@@ -198,7 +206,11 @@ lv_task_t * lv_task_create_basic(void)
 
         /*Only too high priority tasks were found. Add the task to the end*/
         if(tmp == NULL) {
+#ifdef LV_TASK_CREATE_BASIC
+            LV_TASK_CREATE_BASIC(new_task,lv_ll_ins_tail,&LV_GC_ROOT(_lv_task_ll),NULL);
+#else
             new_task = lv_ll_ins_tail(&LV_GC_ROOT(_lv_task_ll));
+#endif
             LV_ASSERT_MEM(new_task);
             if(new_task == NULL) return NULL;
         }
@@ -260,7 +272,11 @@ void lv_task_del(lv_task_t * task)
 {
     lv_ll_rem(&LV_GC_ROOT(_lv_task_ll), task);
 
+#ifdef LV_TASK_DEL
+    LV_TASK_DEL(task);
+#else
     lv_mem_free(task);
+#endif
 
     if(LV_GC_ROOT(_lv_task_act) == task) task_deleted = true; /*The active task was deleted*/
 }

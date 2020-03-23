@@ -67,8 +67,13 @@ typedef struct _lv_task_t
 
     void * user_data; /**< Custom user data */
 
+#if LV_USE_CLASS_PTR
+    lv_class_ptr class_ptr;
+#endif
+
     uint8_t prio : 3; /**< Task priority */
     uint8_t once : 1; /**< 1: one shot task */
+
 } lv_task_t;
 
 /**********************

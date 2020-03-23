@@ -93,7 +93,7 @@ lv_obj_t * lv_label_create(lv_obj_t * par, const lv_obj_t * copy)
     ext->static_txt = 0;
     ext->recolor    = 0;
     ext->body_draw  = 0;
-    ext->align      = LV_LABEL_ALIGN_AUTO;
+    ext->txt_align      = LV_LABEL_ALIGN_AUTO;
     ext->dot_end    = LV_LABEL_DOT_END_INV;
     ext->long_mode  = LV_LABEL_LONG_EXPAND;
 #if LV_USE_ANIMATION
@@ -365,14 +365,14 @@ void lv_label_set_long_mode(lv_obj_t * label, lv_label_long_mode_t long_mode)
  * @param label pointer to a label object
  * @param align 'LV_LABEL_ALIGN_LEFT' or 'LV_LABEL_ALIGN_LEFT'
  */
-void lv_label_set_align(lv_obj_t * label, lv_label_align_t align)
+void lv_label_set_align(lv_obj_t * label, lv_label_align_t txt_align)
 {
     LV_ASSERT_OBJ(label, LV_OBJX_NAME);
 
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
-    if(ext->align == align) return;
+    if(ext->txt_align == txt_align) return;
 
-    ext->align = align;
+    ext->txt_align = txt_align;
 
     lv_obj_invalidate(label); /*Enough to invalidate because alignment is only drawing related
                                  (lv_refr_label_text() not required)*/
@@ -509,7 +509,7 @@ lv_label_align_t lv_label_get_align(const lv_obj_t * label)
 
     lv_label_ext_t * ext = lv_obj_get_ext_attr(label);
 
-    lv_label_align_t align = ext->align;
+    lv_label_align_t align = ext->txt_align;
 
     if(align == LV_LABEL_ALIGN_AUTO) {
 #if LV_USE_BIDI
@@ -1043,7 +1043,7 @@ static bool lv_label_design(lv_obj_t * label, const lv_area_t * mask, lv_design_
         /* In ROLL mode the CENTER and RIGHT are pointless so remove them.
          * (In addition they will result mis-alignment is this case)*/
         if((ext->long_mode == LV_LABEL_LONG_SROLL || ext->long_mode == LV_LABEL_LONG_SROLL_CIRC) &&
-           (ext->align == LV_LABEL_ALIGN_CENTER || ext->align == LV_LABEL_ALIGN_RIGHT)) {
+           (ext->txt_align == LV_LABEL_ALIGN_CENTER || ext->txt_align == LV_LABEL_ALIGN_RIGHT)) {
             lv_point_t size;
             lv_txt_get_size(&size, ext->text, style->text.font, style->text.letter_space, style->text.line_space,
                             LV_COORD_MAX, flag);

@@ -254,6 +254,7 @@ lv_coord_t lv_disp_get_ver_res(lv_disp_t * disp)
 bool lv_disp_get_antialiasing(lv_disp_t * disp)
 {
 #if LV_ANTIALIAS == 0
+    (void)disp;
     return false;
 #else
     if(disp == NULL) disp = lv_disp_get_default();

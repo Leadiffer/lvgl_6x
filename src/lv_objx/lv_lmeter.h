@@ -110,7 +110,7 @@ void lv_lmeter_set_mirror(lv_obj_t *lmeter, bool mirror);
  * @param type which style should be set (can be only `LV_LMETER_STYLE_MAIN`)
  * @param style set the style of the line meter
  */
-static inline void lv_lmeter_set_style(lv_obj_t * lmeter, lv_lmeter_style_t type, lv_style_t * style)
+static inline void lv_lmeter_set_style(lv_obj_t * lmeter, lv_lmeter_style_t type,const lv_style_t * style)
 {
     (void)type; /*Unused*/
     lv_obj_set_style(lmeter, style);

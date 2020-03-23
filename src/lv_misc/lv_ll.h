@@ -145,6 +145,32 @@ void lv_ll_move_before(lv_ll_t * ll_p, void * n_act, void * n_after);
  * @return true: the linked list is empty; false: not empty
  */
 bool lv_ll_is_empty(lv_ll_t * ll_p);
+
+/**
+ * insert the n_ins node or a new to linked list as head
+ * @param ll_p pointer to linked list
+ * @param n_ins node to be insert
+ * @return pointer to the new head
+ */
+void *lv_ll_ins_head_with(lv_ll_t * ll_p, void * n_ins);
+
+/**
+ * Insert the n_ins node or a new node in front of the n_act node
+ * @param ll_p pointer to linked list
+ * @param n_act pointer a node
+ * @param n_ins node to be insert
+ * @return pointer to the new head
+ */
+void * lv_ll_ins_prev_with(lv_ll_t * ll_p, void * n_act, void * n_ins);
+
+/**
+ * append the n_ins node or a new to linked list as tail
+ * @param ll_p pointer to linked list
+ * @param n_ins node to be append
+ * @return pointer to the new tail
+ */
+void * lv_ll_ins_tail_with(lv_ll_t * ll_p, void * n_ins);
+
 /**********************
  *      MACROS
  **********************/

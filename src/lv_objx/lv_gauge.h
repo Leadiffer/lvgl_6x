@@ -126,7 +126,7 @@ void lv_gauge_set_scale(lv_obj_t * gauge, uint16_t angle, uint8_t line_cnt, uint
  * @param type which style should be set (can be only `LV_GAUGE_STYLE_MAIN`)
  * @param style set the style of the gauge
  *  */
-static inline void lv_gauge_set_style(lv_obj_t * gauge, lv_gauge_style_t type, lv_style_t * style)
+static inline void lv_gauge_set_style(lv_obj_t * gauge, lv_gauge_style_t type,const lv_style_t * style)
 {
     (void)type; /*Unused*/
     lv_obj_set_style(gauge, style);

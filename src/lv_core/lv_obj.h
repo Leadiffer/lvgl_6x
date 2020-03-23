@@ -237,6 +237,10 @@ typedef struct _lv_obj_t
     lv_obj_user_data_t user_data; /**< Custom user data for object. */
 #endif
 
+#if LV_USE_CLASS_PTR
+    lv_class_ptr class_ptr;
+#endif
+
 } lv_obj_t;
 
 /*Protect some attributes (max. 8 bit)*/

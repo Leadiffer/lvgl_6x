@@ -62,7 +62,12 @@ void lv_group_init(void)
  */
 lv_group_t * lv_group_create(void)
 {
-    lv_group_t * group = lv_ll_ins_head(&LV_GC_ROOT(_lv_group_ll));
+    lv_group_t * group = NULL;
+#ifdef LV_GROUP_CREATE
+    LV_GROUP_CREATE(group,lv_ll_ins_head,&LV_GC_ROOT(_lv_group_ll));
+#else
+    group = lv_ll_ins_head(&LV_GC_ROOT(_lv_group_ll));
+#endif
     LV_ASSERT_MEM(group);
     if(group == NULL) return NULL;
     lv_ll_init(&group->obj_ll, sizeof(lv_obj_t *));
@@ -106,7 +111,12 @@ void lv_group_del(lv_group_t * group)
 
     lv_ll_clear(&(group->obj_ll));
     lv_ll_rem(&LV_GC_ROOT(_lv_group_ll), group);
+
+#ifdef LV_GROUP_DEL
+    LV_GROUP_DEL(group);
+#else
     lv_mem_free(group);
+#endif
 }
 
 /**

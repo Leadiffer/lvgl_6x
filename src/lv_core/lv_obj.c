@@ -159,7 +159,11 @@ lv_obj_t * lv_obj_create(lv_obj_t * parent, const lv_obj_t * copy)
             return NULL;
         }
 
+#ifdef LV_OBJ_CREATE
+        LV_OBJ_CREATE(new_obj,lv_ll_ins_head,&disp->scr_ll);
+#else
         new_obj = lv_ll_ins_head(&disp->scr_ll);
+#endif
         LV_ASSERT_MEM(new_obj);
         if(new_obj == NULL) return NULL;
 
@@ -240,7 +244,11 @@ lv_obj_t * lv_obj_create(lv_obj_t * parent, const lv_obj_t * copy)
         LV_LOG_TRACE("Object create started");
         LV_ASSERT_OBJ(parent, LV_OBJX_NAME);
 
+#ifdef LV_OBJ_CREATE
+        LV_OBJ_CREATE(new_obj,lv_ll_ins_head,&parent->child_ll);
+#else
         new_obj = lv_ll_ins_head(&parent->child_ll);
+#endif
         LV_ASSERT_MEM(new_obj);
         if(new_obj == NULL) return NULL;
 
@@ -422,7 +430,7 @@ lv_res_t lv_obj_del(lv_obj_t * obj)
     if(group) lv_group_remove_obj(obj);
 #endif
 
-        /*Remove the animations from this object*/
+    /*Remove the animations from this object*/
 #if LV_USE_ANIMATION
     lv_anim_del(obj, NULL);
 #endif
@@ -474,13 +482,22 @@ lv_res_t lv_obj_del(lv_obj_t * obj)
     if(par == NULL) { /*It is a screen*/
         lv_disp_t * d = lv_obj_get_disp(obj);
         lv_ll_rem(&d->scr_ll, obj);
+        /*check if obj is a active screen*/
+        if(d->act_scr == obj)
+        {
+            lv_disp_load_scr(lv_ll_get_head(&d->scr_ll));
+        }
     } else {
         lv_ll_rem(&(par->child_ll), obj);
     }
 
+#ifdef LV_OBJ_DEL
+    LV_OBJ_DEL(obj);
+#else
     /*Delete the base objects*/
     if(obj->ext_attr != NULL) lv_mem_free(obj->ext_attr);
     lv_mem_free(obj); /*Free the object itself*/
+#endif
 
     /*Send a signal to the parent to notify it about the child delete*/
     if(par != NULL) {
@@ -612,6 +629,11 @@ void lv_obj_set_parent(lv_obj_t * obj, lv_obj_t * parent)
 
     if(parent == NULL) {
         LV_LOG_WARN("Can't set parent == NULL to an object");
+        return;
+    }
+
+    if(parent == obj->par) {
+        /* same parent, no need set again */
         return;
     }
 
@@ -1610,7 +1632,11 @@ void * lv_obj_allocate_ext_attr(lv_obj_t * obj, uint16_t ext_size)
 {
     LV_ASSERT_OBJ(obj, LV_OBJX_NAME);
 
+#ifdef LV_OBJ_ALLOCATE_EXT_ATTR
+    LV_OBJ_ALLOCATE_EXT_ATTR(obj,lv_mem_realloc,obj->ext_attr,ext_size);
+#else
     obj->ext_attr = lv_mem_realloc(obj->ext_attr, ext_size);
+#endif
 
     return (void *)obj->ext_attr;
 }
@@ -2617,9 +2643,13 @@ static void delete_children(lv_obj_t * obj)
     lv_obj_t * par = lv_obj_get_parent(obj);
     lv_ll_rem(&(par->child_ll), obj);
 
+#ifdef LV_OBJ_DEL
+    LV_OBJ_DEL(obj);
+#else
     /*Delete the base objects*/
     if(obj->ext_attr != NULL) lv_mem_free(obj->ext_attr);
     lv_mem_free(obj); /*Free the object itself*/
+#endif
 }
 
 static void base_dir_refr_children(lv_obj_t * obj)

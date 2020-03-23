@@ -62,6 +62,8 @@ void lv_draw_label(const lv_area_t * coords, const lv_area_t * mask, const lv_st
                    const char * txt, lv_txt_flag_t flag, lv_point_t * offset, lv_draw_label_txt_sel_t * sel,
                    lv_draw_label_hint_t * hint, lv_bidi_dir_t bidi_dir)
 {
+    (void)bidi_dir; /*Unused*/
+
     const lv_font_t * font = style->text.font;
     lv_coord_t w;
 
