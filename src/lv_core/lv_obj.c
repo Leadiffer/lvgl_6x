@@ -28,6 +28,12 @@
 #include LV_GC_INCLUDE
 #endif /* LV_ENABLE_GC */
 
+#if defined(LV_OBJ_CREATE)
+extern lv_obj_t * lv_obj_create_custom(void*(*func)(lv_ll_t *),lv_ll_t * ll_p);
+extern void lv_obj_del_custom(lv_obj_t * obj);
+extern void * lv_obj_allocate_ext_attr_custom(lv_obj_t * obj, void * (*func)(void *, size_t),void * data_p, size_t new_size);
+#endif
+
 /*********************
  *      DEFINES
  *********************/
@@ -1311,12 +1317,26 @@ void lv_obj_set_hidden(lv_obj_t * obj, bool en)
 
     if(!obj->hidden) lv_obj_invalidate(obj); /*Invalidate when not hidden (hidden objects are ignored) */
 
+    bool hidden = obj->hidden;
     obj->hidden = en == false ? 0 : 1;
 
     if(!obj->hidden) lv_obj_invalidate(obj); /*Invalidate when not hidden (hidden objects are ignored) */
 
+    if(hidden != en)
+        lv_obj_report_hidden_che(obj,en); /* Notify all object if hidden changeded */
+
     lv_obj_t * par = lv_obj_get_parent(obj);
     par->signal_cb(par, LV_SIGNAL_CHILD_CHG, obj);
+}
+
+void lv_obj_report_hidden_che(lv_obj_t * obj,bool hidden)
+{
+    obj->signal_cb(obj, LV_SIGNAL_HIDDEN_CHG, (void*)hidden );
+    lv_obj_t * i;
+    LV_LL_READ(obj->child_ll, i)
+    {
+        lv_obj_report_hidden_che(i,i->hidden || hidden);
+    }
 }
 
 /**

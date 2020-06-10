@@ -110,6 +110,7 @@ enum {
     /*General signals*/
     LV_SIGNAL_CLEANUP, /**< Object is being deleted */
     LV_SIGNAL_CHILD_CHG, /**< Child was removed/added */
+    LV_SIGNAL_HIDDEN_CHG, /**< Object hidden have changed */
     LV_SIGNAL_CORD_CHG, /**< Object coordinates/size have changed */
     LV_SIGNAL_PARENT_SIZE_CHG, /**< Parent's size has changed */
     LV_SIGNAL_STYLE_CHG,    /**< Object's style has changed */
@@ -473,6 +474,12 @@ void lv_obj_refresh_style(lv_obj_t * obj);
  *               (NULL to notify all objects)
  */
 void lv_obj_report_style_mod(lv_style_t * style);
+
+/**
+ * Notify all object if hidden changeded
+ * @param hidden Is obj will hidden
+ */
+void lv_obj_report_hidden_che(lv_obj_t * obj,bool hidden);
 
 /*-----------------
  * Attribute set
