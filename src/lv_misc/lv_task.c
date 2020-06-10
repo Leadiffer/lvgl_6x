@@ -17,6 +17,11 @@
 #include LV_GC_INCLUDE
 #endif /* LV_ENABLE_GC */
 
+#if defined(LV_TASK_CREATE_BASIC)
+extern lv_task_t * lv_task_create_basic_custom(void * func,lv_ll_t * ll_p,void * n_pos);
+extern void lv_task_del_custom(lv_task_t * task);
+#endif
+
 /*********************
  *      DEFINES
  *********************/

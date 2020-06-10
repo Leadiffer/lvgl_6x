@@ -17,6 +17,11 @@
 #include LV_GC_INCLUDE
 #endif /* LV_ENABLE_GC */
 
+#if defined(LV_GROUP_CREATE)
+extern lv_group_t * lv_group_create_custom(void * (*func)(lv_ll_t * ll_p),lv_ll_t * ll_p);
+extern void lv_group_del_custom(lv_group_t * group);
+#endif
+
 /*********************
  *      DEFINES
  *********************/

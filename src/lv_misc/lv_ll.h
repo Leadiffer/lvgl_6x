@@ -30,7 +30,7 @@ extern "C" {
 typedef uint8_t lv_ll_node_t;
 
 /** Description of a linked list*/
-typedef struct
+typedef struct _lv_ll_t
 {
     uint32_t n_size;
     lv_ll_node_t * head;

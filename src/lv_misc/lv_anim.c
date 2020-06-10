@@ -21,6 +21,11 @@
 #include LV_GC_INCLUDE
 #endif /* LV_ENABLE_GC */
 
+#if defined(LV_ANIM_CREATE)
+lv_anim_t * lv_anim_create_custom(lv_anim_t * anim, void * (*func)(lv_ll_t * ll_p), lv_ll_t * ll_p);
+void lv_anim_del_custom(lv_anim_t * anim);
+#endif
+
 /*********************
  *      DEFINES
  *********************/
